@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Social Psychology – Week 3</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #e8eef5;
+    color: #1a1a2e;
+    min-height: 100vh;
+    padding: 24px 16px 100px;
+  }
+  .page-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c4a6e;
+    margin-bottom: 20px;
+  }
+  .card {
+    background: #d4dce8;
+    border-radius: 14px;
+    padding: 20px 18px;
+    margin-bottom: 14px;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: #2c4a6e;
+    margin-bottom: 10px;
+  }
+  .badge .icon { font-size: 0.9rem; }
+  .card p, .card li {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #1a1a2e;
+  }
+  .card ul { list-style: disc; padding-left: 20px; margin-top: 6px; }
+  .card ul li { margin-bottom: 5px; }
+  .card strong { color: #1a1a2e; }
+  .card hr { border: none; border-top: 1px solid rgba(44,74,110,0.2); margin: 12px 0; }
+
+.diagram-box {
+background: #fff;
+border: 1.5px solid #b0bed1;
+border-radius: 10px;
+margin: 12px auto;
+padding: 14px 10px 10px;
+text-align: center;
+max-width: 560px;
+}
+.diagram-box svg { display: block; margin: 0 auto; max-width: 100%; }
+.diagram-caption {
+font-size: 0.7rem;
+color: #5a6a8a;
+margin-top: 6px;
+font-style: italic;
+}
+
+.quiz-card { background: #d4dce8; }
+.quiz-card .question-text {
+font-size: 0.93rem;
+font-weight: 700;
+color: #1a1a2e;
+margin-bottom: 12px;
+line-height: 1.5;
+}
+.option {
+display: flex;
+align-items: center;
+gap: 10px;
+background: #fff;
+border: 1.5px solid #b0bed1;
+border-radius: 8px;
+padding: 11px 14px;
+margin-bottom: 8px;
+font-size: 0.88rem;
+color: #1a1a2e;
+cursor: pointer;
+transition: border-color 0.2s, background 0.2s;
+user-select: none;
+}
+.option:hover { border-color: #7890b0; background: #f4f7fb; }
+.option .radio {
+width: 18px;
+height: 18px;
+border: 2px solid #999;
+border-radius: 50%;
+flex-shrink: 0;
+background: #fff;
+}
+.option.selected .radio { border-color: #2c4a6e; background: #2c4a6e; }
+.option.correct { border-color: #4caf50; background: #e8f5e9; }
+.option.wrong { border-color: #e53935; background: #ffebee; }
+
+.show-btn {
+display: inline-block;
+margin-top: 10px;
+padding: 6px 16px;
+border: 1.5px solid #7890b0;
+border-radius: 6px;
+background: transparent;
+color: #2c4a6e;
+font-size: 0.8rem;
+font-weight: 600;
+cursor: pointer;
+transition: background 0.2s, color 0.2s;
+}
+.show-btn:hover { background: #2c4a6e; color: #fff; }
+
+.answer-reveal {
+display: none;
+margin-top: 12px;
+background: #eaf4e8;
+border: 1px solid #a5d6a7;
+border-radius: 8px;
+padding: 14px 15px;
+}
+.answer-reveal.visible { display: block; }
+.ans-row {
+display: flex;
+align-items: center;
+gap: 8px;
+margin-bottom: 6px;
+}
+.ans-tick { font-size: 1rem; }
+.ans-label {
+font-size: 0.68rem;
+font-weight: 700;
+letter-spacing: 1.2px;
+text-transform: uppercase;
+color: #2e7d32;
+}
+.ans-letter {
+font-size: 0.9rem;
+font-weight: 700;
+color: #2e7d32;
+margin-bottom: 5px;
+}
+.ans-explain {
+font-size: 0.84rem;
+color: #2c4a6e;
+line-height: 1.6;
+}
+.ans-explain strong { color: #1a1a2e; }
+
+.nav-bar {
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+background: #fff;
+border-top: 1px solid #ddd;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 12px 20px;
+box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+}
+.nav-btn {
+padding: 8px 18px;
+border-radius: 20px;
+border: none;
+font-size: 0.82rem;
+font-weight: 600;
+cursor: pointer;
+transition: opacity 0.2s;
+}
+.nav-btn.prev { background: #b0bed1; color: #2c4a6e; }
+.nav-btn.next { background: #2c4a6e; color: #fff; }
+.nav-btn:disabled { opacity: 0.35; cursor: default; }
+.nav-counter { font-size: 0.82rem; color: #666; }
+
+.page { display: none; }
+.page.active { display: block; }
+
+.slide-ref {
+display: inline-flex;
+align-items: center;
+gap: 5px;
+background: rgba(255,255,255,0.6);
+border-radius: 6px;
+padding: 4px 10px;
+font-size: 0.71rem;
+color: #2c4a6e;
+font-weight: 600;
+margin-bottom: 8px;
+}
+</style>
+
+</head>
+<body>
+
+<!-- PAGE 1 -->
+
+<div class="page active" id="page-1">
+  <div class="page-title">What is Social Psychology?</div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">📘</span> Concept</div>
+    <div class="slide-ref">📄 Lecture slides: Page 3</div>
+    <p><strong>Social Psychology</strong> studies how people's thoughts, feelings, and behaviours are influenced by the actual, imagined, or implied presence of others.</p>
+    <hr>
+    <p><strong>Basic assumptions:</strong></p>
+    <ul>
+      <li>We are <strong>social beings</strong> — we don't exist in isolation</li>
+      <li>Our behaviour is shaped by <strong>social situations</strong>, not just personality</li>
+      <li>We are influenced by others even when they're not physically present</li>
+    </ul>
+    <hr>
+    <p>Key topics in social psychology:</p>
+    <ul>
+      <li><strong>Conformity</strong> — fitting in with the group</li>
+      <li><strong>Obedience</strong> — following orders from authority</li>
+      <li><strong>Compliance</strong> — agreeing to requests</li>
+      <li><strong>Minority influence</strong> — how small groups change majority opinion</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🌍</span> Real World Connection</div>
+    <p>Ever changed your opinion after seeing what your friends think on social media? That's social psychology in action. You might have had a strong view on something, but after seeing everyone else's comments, you started doubting yourself or even changed your mind. Our thoughts aren't as "independent" as we like to think.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🖊️</span> Plain English</div>
+    <p>Social psychology is all about how <strong>other people affect us</strong>. It explains why you might act differently when you're alone versus when you're in a group. It's why peer pressure works, why we follow trends, and why authority figures can make us do things we wouldn't normally do.</p>
+  </div>
+
+  <div class="card quiz-card">
+    <div class="badge"><span class="icon">❓</span> Question</div>
+    <div class="slide-ref">📄 Lecture slides: Page 3</div>
+    <p class="question-text">Social psychology focuses on how people are influenced by:</p>
+    <div class="option" onclick="sel(this,'q1','A')" data-quiz="q1" data-val="A"><div class="radio"></div> a) Their genes and biology only</div>
+    <div class="option" onclick="sel(this,'q1','B')" data-quiz="q1" data-val="B"><div class="radio"></div> b) The actual, imagined, or implied presence of others</div>
+    <div class="option" onclick="sel(this,'q1','C')" data-quiz="q1" data-val="C"><div class="radio"></div> c) Their childhood experiences only</div>
+    <div class="option" onclick="sel(this,'q1','D')" data-quiz="q1" data-val="D"><div class="radio"></div> d) Their individual personality traits only</div>
+    <button class="show-btn" onclick="rev('q1')">Show Answer</button>
+    <div class="answer-reveal" id="ans-q1">
+      <div class="ans-row"><span class="ans-tick">✅</span><span class="ans-label">Correct Answer</span></div>
+      <div class="ans-letter">b) The actual, imagined, or implied presence of others</div>
+      <div class="ans-explain">Social psychology is all about <strong>social influence</strong>. This includes when people are physically present (actual), when we think about what others might think (imagined), or when social norms are just understood (implied). Biology, childhood, and personality all matter — but social psychology specifically focuses on how <strong>other people</strong> shape our behaviour.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+
+<div class="page" id="page-2">
+  <div class="page-title">Conformity: Types & Reasons</div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">📘</span> Concept</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 4–5</div>
+    <p><strong>Conformity</strong> = when an individual's behaviour is influenced by a larger or more dominant group.</p>
+    <hr>
+    <p><strong>Three types of conformity</strong> (Kelman, 1958):</p>
+    <ul>
+      <li><strong>Compliance</strong> — publicly going along with the group but privately disagreeing. You don't want to look different.</li>
+      <li><strong>Identification</strong> — conforming because you value the group. Public change, but not fully agreeing internally.</li>
+      <li><strong>Internalisation</strong> — genuinely accepting the group's views as your own. Both public and private change.</li>
+    </ul>
+    <hr>
+    <p><strong>Why do we conform? Two reasons:</strong></p>
+    <ul>
+      <li><strong>Informational social influence</strong> — we look to the group for guidance when we're uncertain. We assume they have better information. Common in ambiguous situations.</li>
+      <li><strong>Normative social influence</strong> — we don't want to be rejected or look foolish, so we follow the group norms even if we think they're wrong.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🌍</span> Real World Connection</div>
+    <p>Think about fashion trends. When everyone starts wearing a certain style, you might start wearing it too — even if you don't personally love it. That's <strong>normative influence</strong> (you don't want to look out of place). But if you're in a new city and everyone's queuing at a particular food stall, you might join the queue thinking "they must know it's good" — that's <strong>informational influence</strong>.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🖊️</span> Plain English</div>
+    <p>Conformity is just changing your behaviour to match the group. Sometimes you do it because you think the group knows better than you (<strong>informational</strong>). Sometimes you do it because you don't want to stand out or be judged (<strong>normative</strong>). The type of conformity depends on whether you're just pretending to agree or actually changing your mind.</p>
+  </div>
+
+  <div class="card quiz-card">
+    <div class="badge"><span class="icon">❓</span> Question</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 4–5</div>
+    <p class="question-text">You don't know the answer in class, but everyone else agrees on option C, so you say C too. Which type of influence is this?</p>
+    <div class="option" onclick="sel(this,'q2','A')" data-quiz="q2" data-val="A"><div class="radio"></div> a) Normative social influence</div>
+    <div class="option" onclick="sel(this,'q2','B')" data-quiz="q2" data-val="B"><div class="radio"></div> b) Informational social influence</div>
+    <div class="option" onclick="sel(this,'q2','C')" data-quiz="q2" data-val="C"><div class="radio"></div> c) Minority influence</div>
+    <div class="option" onclick="sel(this,'q2','D')" data-quiz="q2" data-val="D"><div class="radio"></div> d) Obedience</div>
+    <button class="show-btn" onclick="rev('q2')">Show Answer</button>
+    <div class="answer-reveal" id="ans-q2">
+      <div class="ans-row"><span class="ans-tick">✅</span><span class="ans-label">Correct Answer</span></div>
+      <div class="ans-letter">b) Informational social influence</div>
+      <div class="ans-explain">You're looking to the group for <strong>information</strong>. You don't know the answer, so you assume the majority probably has better information than you do. This is informational influence — using the group as a source of knowledge. If you knew the answer was B but said C just to fit in, <em>that</em> would be normative influence.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3 -->
+
+<div class="page" id="page-3">
+  <div class="page-title">Asch & Sherif: Conformity Studies</div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">📘</span> Concept</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 6–7</div>
+    <p><strong>Asch (1951) — Normative Influence</strong></p>
+    <ul>
+      <li><strong>Aim:</strong> To see if people conform on an unambiguous (clear) task</li>
+      <li><strong>Method:</strong> Participants judged line lengths. Confederates (fake participants) deliberately gave wrong answers</li>
+      <li><strong>Results:</strong> 75% of participants conformed at least once. Wrong answers given 37% of the time (vs 0.7% when alone)</li>
+      <li><strong>Why?</strong> Participants said they didn't believe the wrong answer but didn't want to appear different — <strong>normative influence</strong></li>
+    </ul>
+    <hr>
+    <p><strong>Sherif (1935) — Informational Influence</strong></p>
+    <ul>
+      <li><strong>Aim:</strong> To see if people conform on an ambiguous (unclear) task</li>
+      <li><strong>Method:</strong> Used autokinetic effect (stationary light appears to move in dark room). Participants judged how far it "moved"</li>
+      <li><strong>Results:</strong> When alone, everyone had different estimates. In groups, estimates converged (became similar). When retested alone, participants stuck with the group norm</li>
+      <li><strong>Why?</strong> The task was ambiguous, so participants genuinely looked to others for information — <strong>informational influence</strong></li>
+    </ul>
+  </div>
+
+  <div class="diagram-box">
+    <svg viewBox="0 0 360 180" width="360" height="180">
+      <!-- Title -->
+      <rect x="5" y="3" width="350" height="18" fill="#2c4a6e" rx="4"/>
+      <text x="180" y="17" font-size="7.5" fill="#fff" font-weight="bold" text-anchor="middle">Asch Line Judgment Task</text>
+      <!-- Reference line box -->
+      <rect x="30" y="35" width="100" height="130" fill="#fff" stroke="#2c4a6e" stroke-width="1.5" rx="4"/>
+      <text x="80" y="50" font-size="7" fill="#2c4a6e" font-weight="bold" text-anchor="middle">Reference Line</text>
+      <line x1="80" y1="70" x2="80" y2="150" stroke="#2c4a6e" stroke-width="3"/>
+      <!-- Comparison lines box -->
+      <rect x="150" y="35" width="180" height="130" fill="#fff" stroke="#2c4a6e" stroke-width="1.5" rx="4"/>
+      <text x="240" y="50" font-size="7" fill="#2c4a6e" font-weight="bold" text-anchor="middle">Which line matches?</text>
+      <!-- Line A (short) -->
+      <line x1="180" y1="90" x2="180" y2="130" stroke="#e53935" stroke-width="2.5"/>
+      <text x="180" y="145" font-size="7" fill="#2c4a6e" font-weight="bold" text-anchor="middle">A</text>
+      <!-- Line B (matches reference) -->
+      <line x1="240" y1="70" x2="240" y2="150" stroke="#4caf50" stroke-width="2.5"/>
+      <text x="240" y="145" font-size="7" fill="#2c4a6e" font-weight="bold" text-anchor="middle">B ✓</text>
+      <!-- Line C (long) -->
+      <line x1="300" y1="60" x2="300" y2="155" stroke="#e53935" stroke-width="2.5"/>
+      <text x="300" y="145" font-size="7" fill="#2c4a6e" font-weight="bold" text-anchor="middle">C</text>
+      <!-- Note -->
+      <rect x="10" y="168" width="340" height="10" fill="#fff8e1" stroke="#f39c12" stroke-width="0.8" rx="2"/>
+      <text x="180" y="176" font-size="6" fill="#e67e22" text-anchor="middle">Confederates say "A" — do you agree or conform?</text>
+    </svg>
+    <div class="diagram-caption">Asch's line task — the correct answer (B) was obvious</div>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🌍</span> Real World Connection</div>
+    <p>Asch's study explains why people go along with clearly wrong answers in meetings — nobody wants to be the one person disagreeing with everyone else. Sherif's study explains why we check reviews before buying something — when we're uncertain, we look to what others think to guide us.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🖊️</span> Plain English</div>
+    <p><strong>Asch:</strong> Even when the answer is obvious, people will say something wrong just to fit in with the group. <strong>Sherif:</strong> When the answer isn't clear, people genuinely change their minds to match the group because they assume the group knows better. Different reasons for conforming.</p>
+  </div>
+
+  <div class="card quiz-card">
+    <div class="badge"><span class="icon">❓</span> Question</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 6–7</div>
+    <p class="question-text">In Asch's study, participants conformed 37% of the time. What does this tell us?</p>
+    <div class="option" onclick="sel(this,'q3','A')" data-quiz="q3" data-val="A"><div class="radio"></div> a) Most people never conform, even under pressure</div>
+    <div class="option" onclick="sel(this,'q3','B')" data-quiz="q3" data-val="B"><div class="radio"></div> b) People will conform to an obviously wrong answer to avoid standing out</div>
+    <div class="option" onclick="sel(this,'q3','C')" data-quiz="q3" data-val="C"><div class="radio"></div> c) People genuinely couldn't tell which line was correct</div>
+    <div class="option" onclick="sel(this,'q3','D')" data-quiz="q3" data-val="D"><div class="radio"></div> d) Conformity only happens in ambiguous situations</div>
+    <button class="show-btn" onclick="rev('q3')">Show Answer</button>
+    <div class="answer-reveal" id="ans-q3">
+      <div class="ans-row"><span class="ans-tick">✅</span><span class="ans-label">Correct Answer</span></div>
+      <div class="ans-letter">b) People will conform to an obviously wrong answer to avoid standing out</div>
+      <div class="ans-explain">The task was <strong>unambiguous</strong> — the control group got it right 99.3% of the time when alone. But when surrounded by confederates giving wrong answers, participants conformed over a third of the time. This is powerful evidence of <strong>normative influence</strong> — people knew the answer was wrong but went along with it anyway to fit in.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4 -->
+
+<div class="page" id="page-4">
+  <div class="page-title">Zimbardo's Stanford Prison Experiment</div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">📘</span> Concept</div>
+    <div class="slide-ref">📄 Lecture slides: Page 8</div>
+    <p><strong>Zimbardo et al. (1973)</strong></p>
+    <ul>
+      <li><strong>Aim:</strong> To test conformity to assigned social roles</li>
+      <li><strong>Method:</strong> 24 male college students randomly assigned as "prisoners" or "guards" in a mock prison (Stanford University basement). Guards given freedom to maintain order but no physical violence allowed. Planned for 2 weeks.</li>
+      <li><strong>Results:</strong>
+        <ul>
+          <li>Guards became increasingly authoritarian and abusive</li>
+          <li>Prisoners showed psychological distress, passivity, emotional breakdowns</li>
+          <li><strong>Deindividuation</strong> occurred — people stopped feeling like individuals</li>
+          <li>Experiment stopped after only 6 days due to ethical concerns</li>
+        </ul>
+      </li>
+      <li><strong>Similar findings:</strong> Orlando (1973) mock psychiatric ward</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🌍</span> Real World Connection</div>
+    <p>This study helps explain real-world abuses of power — like prison guard brutality or workplace bullying. When people are given a <strong>role</strong> (especially an authority role), they often conform to what they think that role should be, even if it means acting cruelly. The uniform and the situation can overpower someone's normal personality. It's terrifying and important.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🖊️</span> Plain English</div>
+    <p>Normal, healthy students were randomly assigned to be guards or prisoners. Within days, the "guards" became abusive and the "prisoners" broke down emotionally. Nobody told them to act this way — they just <strong>conformed to the role</strong> they were given. It shows how powerful situations can be in shaping behaviour, often more powerful than personality.</p>
+  </div>
+
+  <div class="card quiz-card">
+    <div class="badge"><span class="icon">❓</span> Question</div>
+    <div class="slide-ref">📄 Lecture slides: Page 8</div>
+    <p class="question-text">The Stanford Prison Experiment was stopped after 6 days instead of 2 weeks. Why?</p>
+    <div class="option" onclick="sel(this,'q4','A')" data-quiz="q4" data-val="A"><div class="radio"></div> a) The participants got bored and wanted to leave</div>
+    <div class="option" onclick="sel(this,'q4','B')" data-quiz="q4" data-val="B"><div class="radio"></div> b) The guards and prisoners became too friendly</div>
+    <div class="option" onclick="sel(this,'q4','C')" data-quiz="q4" data-val="C"><div class="radio"></div> c) The guards became abusive and prisoners showed severe psychological distress — ethical concerns</div>
+    <div class="option" onclick="sel(this,'q4','D')" data-quiz="q4" data-val="D"><div class="radio"></div> d) Zimbardo ran out of funding</div>
+    <button class="show-btn" onclick="rev('q4')">Show Answer</button>
+    <div class="answer-reveal" id="ans-q4">
+      <div class="ans-row"><span class="ans-tick">✅</span><span class="ans-label">Correct Answer</span></div>
+      <div class="ans-letter">c) The guards became abusive and prisoners showed severe psychological distress — ethical concerns</div>
+      <div class="ans-explain">The situation escalated so quickly that it became <strong>unethical to continue</strong>. Guards were becoming increasingly cruel, prisoners were having emotional breakdowns, and participants were losing their sense of individual identity (deindividuation). The study showed conformity to roles was real — but at a serious psychological cost to participants.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 5 -->
+
+<div class="page" id="page-5">
+  <div class="page-title">Fake News & Conformity Online</div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">📘</span> Concept</div>
+    <div class="slide-ref">📄 Lecture slides: Page 9</div>
+    <p><strong>Colliander (2019)</strong></p>
+    <ul>
+      <li><strong>Aim:</strong> To investigate conformity effects when people respond to fake news on social media</li>
+      <li><strong>Method:</strong> Independent measures design — 4 groups exposed to fake news article:
+        <ul>
+          <li>Group 1: Article with no comments</li>
+          <li>Group 2: Article with positive comments</li>
+          <li>Group 3: Article with critical comments</li>
+          <li>Group 4: Article with positive comments + disclaimer saying it's fake</li>
+        </ul>
+      </li>
+      <li><strong>Results:</strong>
+        <ul>
+          <li>After seeing <strong>critical comments</strong>, people were less likely to share or positively comment</li>
+          <li>After seeing <strong>positive comments</strong>, people were more likely to engage positively</li>
+          <li>Surprisingly: the disclaimer from the social media platform did <strong>not</strong> reduce sharing/commenting</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🌍</span> Real World Connection</div>
+    <p>This explains why fake news spreads so easily on social media. If you see an article with hundreds of positive comments, you're more likely to believe it and share it — even if it's completely false. We conform to what other commenters are saying. Worryingly, official "fact check" warnings don't work as well as you'd think — <strong>peer comments are more influential than platform warnings</strong>.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🖊️</span> Plain English</div>
+    <p>We're heavily influenced by what <strong>other people say</strong> in the comments, not just by the content itself. If everyone's praising an article, we're more likely to share it. If everyone's criticising it, we hold back. The platform telling us "this is fake" matters less than what our peers are saying. That's conformity in the digital age.</p>
+  </div>
+
+  <div class="card quiz-card">
+    <div class="badge"><span class="icon">❓</span> Question</div>
+    <div class="slide-ref">📄 Lecture slides: Page 9</div>
+    <p class="question-text">Colliander's study found that disclaimers from social media platforms warning "this is fake news" did not significantly reduce sharing. What does this suggest?</p>
+    <div class="option" onclick="sel(this,'q5','A')" data-quiz="q5" data-val="A"><div class="radio"></div> a) People don't read disclaimers at all</div>
+    <div class="option" onclick="sel(this,'q5','B')" data-quiz="q5" data-val="B"><div class="radio"></div> b) Peer comments are more influential than official warnings — conformity to others is stronger</div>
+    <div class="option" onclick="sel(this,'q5','C')" data-quiz="q5" data-val="C"><div class="radio"></div> c) Disclaimers make people share fake news more</div>
+    <div class="option" onclick="sel(this,'q5','D')" data-quiz="q5" data-val="D"><div class="radio"></div> d) Only positive comments matter; critical comments have no effect</div>
+    <button class="show-btn" onclick="rev('q5')">Show Answer</button>
+    <div class="answer-reveal" id="ans-q5">
+      <div class="ans-row"><span class="ans-tick">✅</span><span class="ans-label">Correct Answer</span></div>
+      <div class="ans-letter">b) Peer comments are more influential than official warnings — conformity to others is stronger</div>
+      <div class="ans-explain">This is a powerful finding about conformity in the digital age. People are more influenced by what <strong>other users say</strong> (normative and informational influence from peers) than by what an official platform tells them. We look to <strong>social proof</strong> from people like us more than we trust authority warnings. This makes tackling misinformation incredibly difficult.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 6 -->
+
+<div class="page" id="page-6">
+  <div class="page-title">Minority Influence</div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">📘</span> Concept</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 10–13</div>
+    <p><strong>Minority Influence</strong> — small groups or individuals can change how the majority thinks.</p>
+    <hr>
+    <p><strong>Moscovici's Conversion Theory:</strong></p>
+    <ul>
+      <li>Moscovici argued Asch focused too much on majority → minority influence</li>
+      <li>The opposite is also possible: minority → majority</li>
+      <li><strong>Conversion</strong> = how a minority convinces the majority their views are correct</li>
+      <li>Unlike compliance (public change only), conversion involves <strong>both public and private change</strong></li>
+      <li>Minority influence is based on <strong>informational influence</strong> — providing new ideas that make the majority re-evaluate</li>
+    </ul>
+    <hr>
+    <p><strong>Moscovici et al. (1969) Blue-Green Study:</strong></p>
+    <ul>
+      <li><strong>Method:</strong> 2 confederates + 4 real participants. Shown 36 blue slides, asked to call out the colour
+        <ul>
+          <li>Condition 1: Confederates said "green" on all 36 slides (consistent)</li>
+          <li>Condition 2: Confederates said "green" 24 times, "blue" 12 times (inconsistent)</li>
+        </ul>
+      </li>
+      <li><strong>Results:</strong> Consistent minority influenced majority 8.42% of the time. Inconsistent minority only 1.25%. 32% of participants said "green" at least once.</li>
+      <li><strong>Key finding:</strong> <strong>Consistency</strong> is crucial for minority influence</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🌍</span> Real World Connection</div>
+    <p>Think about social movements — women's suffrage, civil rights, climate activism. These all started as <strong>minority views</strong> that seemed extreme at the time. But because activists were <strong>consistent</strong> in their message over years, they gradually convinced the majority. Greta Thunberg is a modern example — one teenager's consistent message influenced millions.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🖊️</span> Plain English</div>
+    <p>Minorities <strong>can</strong> change majority opinion, but only if they're <strong>consistent</strong>. If a small group keeps saying the same thing confidently over time, the majority starts to think "maybe they have a point." But if the minority keeps changing their message or contradicting themselves, nobody takes them seriously. Consistency = credibility.</p>
+  </div>
+
+  <div class="card quiz-card">
+    <div class="badge"><span class="icon">❓</span> Question</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 10–13</div>
+    <p class="question-text">Moscovici's blue-green study found that a consistent minority influenced the majority 8.42% of the time, compared to 1.25% for an inconsistent minority. What does this show?</p>
+    <div class="option" onclick="sel(this,'q6','A')" data-quiz="q6" data-val="A"><div class="radio"></div> a) Minority influence is impossible</div>
+    <div class="option" onclick="sel(this,'q6','B')" data-quiz="q6" data-val="B"><div class="radio"></div> b) Consistency is crucial — minorities must maintain a consistent message to be influential</div>
+    <div class="option" onclick="sel(this,'q6','C')" data-quiz="q6" data-val="C"><div class="radio"></div> c) Only majorities can influence people</div>
+    <div class="option" onclick="sel(this,'q6','D')" data-quiz="q6" data-val="D"><div class="radio"></div> d) People are colourblind in group situations</div>
+    <button class="show-btn" onclick="rev('q6')">Show Answer</button>
+    <div class="answer-reveal" id="ans-q6">
+      <div class="ans-row"><span class="ans-tick">✅</span><span class="ans-label">Correct Answer</span></div>
+      <div class="ans-letter">b) Consistency is crucial — minorities must maintain a consistent message to be influential</div>
+      <div class="ans-explain">The <strong>consistent</strong> minority was nearly 7 times more influential than the inconsistent one. When the minority kept changing (blue/green/blue/green), people dismissed them. But when they stuck to "green" every single time, some participants started questioning their own perception. <strong>Consistency signals confidence and commitment</strong>, which makes the majority take the minority seriously.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 7 -->
+
+<div class="page" id="page-7">
+  <div class="page-title">Compliance Techniques</div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">📘</span> Concept</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 14–16</div>
+    <p><strong>Compliance</strong> = a change in behaviour in response to requests (not orders). Usually superficial, public, and temporary.</p>
+    <hr>
+    <p><strong>Foot-in-the-Door (Freedman & Fraser, 1966):</strong></p>
+    <ul>
+      <li>Agreeing to a small request increases likelihood of agreeing to a larger request later</li>
+      <li><strong>Consistency</strong> is key — larger request must be similar to the small one</li>
+      <li><strong>Example (Sherman, 1980):</strong> Called people asking if they'd hypothetically volunteer 3 hours for charity. 3 days later, asked them to actually volunteer → 31% agreed (vs 4% who only got the second call)</li>
+    </ul>
+    <hr>
+    <p><strong>Door-in-the-Face (Cialdini et al., 1975):</strong></p>
+    <ul>
+      <li>Refusing a large request increases likelihood of accepting a smaller request</li>
+      <li><strong>Reciprocity</strong> is important — when someone makes a concession, we feel obliged to reciprocate</li>
+      <li><strong>Example (Cialdini, 1975):</strong> Asked people to be counsellors for 2 years (most refused), then asked them to take kids to zoo once → 50% agreed (vs much lower baseline)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🌍</span> Real World Connection</div>
+    <p><strong>Foot-in-the-door:</strong> Charities often ask you to sign a petition first (small request), then ask for a donation (larger request). Salespeople offer a "free trial" knowing once you've started using something, you're more likely to buy. <strong>Door-in-the-face:</strong> Estate agents show you an overpriced house first, then show you a "more reasonable" one — suddenly it seems like a bargain even though it's still expensive.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🖊️</span> Plain English</div>
+    <p><strong>Foot-in-the-door:</strong> Get someone to say yes to something small, and they're more likely to say yes to something bigger later. We like to be consistent. <strong>Door-in-the-face:</strong> Ask for something huge (which gets rejected), then ask for something smaller — people feel like they should meet you halfway. Both techniques manipulate our desire to seem consistent or fair.</p>
+  </div>
+
+  <div class="card quiz-card">
+    <div class="badge"><span class="icon">❓</span> Question</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 14–16</div>
+    <p class="question-text">A charity calls you asking for a £100 donation. You refuse. They then ask for £5. You agree. Which compliance technique is this?</p>
+    <div class="option" onclick="sel(this,'q7','A')" data-quiz="q7" data-val="A"><div class="radio"></div> a) Foot-in-the-door</div>
+    <div class="option" onclick="sel(this,'q7','B')" data-quiz="q7" data-val="B"><div class="radio"></div> b) Door-in-the-face</div>
+    <div class="option" onclick="sel(this,'q7','C')" data-quiz="q7" data-val="C"><div class="radio"></div> c) Conformity</div>
+    <div class="option" onclick="sel(this,'q7','D')" data-quiz="q7" data-val="D"><div class="radio"></div> d) Obedience</div>
+    <button class="show-btn" onclick="rev('q7')">Show Answer</button>
+    <div class="answer-reveal" id="ans-q7">
+      <div class="ans-row"><span class="ans-tick">✅</span><span class="ans-label">Correct Answer</span></div>
+      <div class="ans-letter">b) Door-in-the-face</div>
+      <div class="ans-explain">They started with a <strong>large request</strong> (£100) which you refused, then made a <strong>smaller request</strong> (£5). Because they "backed down," you feel like you should reciprocate by meeting them halfway. This is door-in-the-face. If they'd asked for £5 first, then £100 later, that would be foot-in-the-door.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 8 -->
+
+<div class="page" id="page-8">
+  <div class="page-title">Milgram's Obedience Study</div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">📘</span> Concept</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 17–21</div>
+    <p><strong>Obedience</strong> = acting in response to a direct order from an authority figure.</p>
+    <p>Different from conformity (social pressure) — obedience involves a <strong>hierarchy of power</strong>.</p>
+    <hr>
+    <p><strong>Milgram (1963) — Famous obedience study:</strong></p>
+    <ul>
+      <li><strong>Setting:</strong> Yale University lab. 40 men participated</li>
+      <li><strong>Cover story:</strong> Told it was a study on learning and memory</li>
+      <li><strong>Method:</strong> Participant = "teacher," confederate = "learner." Teacher told to give electric shocks for wrong answers, increasing from 15V to 450V. Learner strapped in chair (fake shocks, real protests)</li>
+      <li><strong>Results:</strong>
+        <ul>
+          <li>65% (26/40) went to 450V maximum shock</li>
+          <li>100% went past 300V (when learner protested loudly)</li>
+        </ul>
+      </li>
+    </ul>
+    <hr>
+    <p><strong>Gibson et al. (2017) reanalysis:</strong></p>
+    <ul>
+      <li>Analyzed audio recordings from Milgram's study</li>
+      <li>Found participants used "just following orders" as a <strong>strategy to justify their behaviour</strong>, not just blind obedience</li>
+      <li>Many didn't want to continue but did so because they were told to</li>
+    </ul>
+  </div>
+
+  <div class="diagram-box">
+    <svg viewBox="0 0 360 160" width="360" height="160">
+      <!-- Title -->
+      <rect x="5" y="3" width="350" height="18" fill="#2c4a6e" rx="4"/>
+      <text x="180" y="17" font-size="7.5" fill="#fff" font-weight="bold" text-anchor="middle">Milgram's Experimental Setup</text>
+      <!-- Experimenter -->
+      <rect x="20" y="35" width="70" height="50" fill="#e8eef5" stroke="#2c4a6e" stroke-width="1.5" rx="4"/>
+      <circle cx="55" cy="52" r="8" fill="#2c4a6e"/>
+      <rect x="48" y="60" width="14" height="20" fill="#2c4a6e" rx="2"/>
+      <text x="55" y="88" font-size="6.5" fill="#2c4a6e" font-weight="bold" text-anchor="middle">Experimenter</text>
+      <text x="55" y="96" font-size="5.5" fill="#5a6a8a" text-anchor="middle">(authority)</text>
+      <!-- Teacher (real participant) -->
+      <rect x="110" y="35" width="80" height="50" fill="#fff" stroke="#2c4a6e" stroke-width="1.5" rx="4"/>
+      <circle cx="150" cy="52" r="8" fill="#7890b0"/>
+      <rect x="143" y="60" width="14" height="20" fill="#7890b0" rx="2"/>
+      <text x="150" y="88" font-size="6.5" fill="#2c4a6e" font-weight="bold" text-anchor="middle">Teacher</text>
+      <text x="150" y="96" font-size="5.5" fill="#5a6a8a" text-anchor="middle">(real participant)</text>
+      <!-- Shock generator -->
+      <rect x="120" y="100" width="60" height="30" fill="#e53935" stroke="#c0392b" stroke-width="1.5" rx="3"/>
+      <text x="150" y="112" font-size="6" fill="#fff" font-weight="bold" text-anchor="middle">Shock</text>
+      <text x="150" y="120" font-size="6" fill="#fff" font-weight="bold" text-anchor="middle">Generator</text>
+      <text x="150" y="128" font-size="5" fill="#fff" text-anchor="middle">15V → 450V</text>
+      <!-- Learner -->
+      <rect x="230" y="35" width="110" height="95" fill="#ffebee" stroke="#e53935" stroke-width="1.5" rx="4"/>
+      <circle cx="285" cy="60" r="8" fill="#e53935"/>
+      <rect x="278" y="68" width="14" height="20" fill="#e53935" rx="2"/>
+      <!-- Chair -->
+      <rect x="265" y="88" width="40" height="35" fill="#d4dce8" stroke="#2c4a6e" stroke-width="1"/>
+      <text x="285" y="110" font-size="6.5" fill="#2c4a6e" font-weight="bold" text-anchor="middle">Learner</text>
+      <text x="285" y="118" font-size="5.5" fill="#5a6a8a" text-anchor="middle">(confederate)</text>
+      <text x="285" y="126" font-size="5" fill="#e53935" text-anchor="middle">strapped in</text>
+      <!-- Arrows -->
+      <line x1="90" y1="60" x2="108" y2="60" stroke="#2c4a6e" stroke-width="1.5"/>
+      <polygon points="108,57 115,60 108,63" fill="#2c4a6e"/>
+      <text x="99" y="55" font-size="5" fill="#2c4a6e" font-weight="bold">Orders</text>
+      <line x1="180" y1="115" x2="228" y2="115" stroke="#e53935" stroke-width="2"/>
+      <polygon points="228,112 235,115 228,118" fill="#e53935"/>
+      <text x="204" y="110" font-size="5" fill="#e53935" font-weight="bold">Shocks</text>
+      <!-- Note -->
+      <rect x="10" y="142" width="340" height="16" fill="#fff8e1" stroke="#f39c12" stroke-width="1" rx="3"/>
+      <text x="180" y="152" font-size="6" fill="#e67e22" text-anchor="middle">Experimenter orders teacher to continue. Learner protests. Will teacher obey?</text>
+    </svg>
+    <div class="diagram-caption">Setup: Experimenter (authority) orders teacher (participant) to shock learner (confederate)</div>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🌍</span> Real World Connection</div>
+    <p>Milgram's study was designed to understand how ordinary Germans obeyed orders during the Holocaust. The terrifying finding? <strong>65% of ordinary Americans also obeyed destructive orders</strong> in a lab. This isn't about "evil people" — it's about how situations and authority can make normal people do terrible things. It explains atrocities from Nazi Germany to Abu Ghraib prison.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🖊️</span> Plain English</div>
+    <p>Milgram showed that most people will follow orders from an authority figure, even when those orders involve harming someone. The participants weren't sadists — many were visibly distressed — but they kept going because someone in a lab coat told them to. Authority is incredibly powerful, sometimes more powerful than our own conscience.</p>
+  </div>
+
+  <div class="card quiz-card">
+    <div class="badge"><span class="icon">❓</span> Question</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 18–19</div>
+    <p class="question-text">In Milgram's study, what percentage of participants administered shocks all the way to 450 volts?</p>
+    <div class="option" onclick="sel(this,'q8','A')" data-quiz="q8" data-val="A"><div class="radio"></div> a) 10%</div>
+    <div class="option" onclick="sel(this,'q8','B')" data-quiz="q8" data-val="B"><div class="radio"></div> b) 35%</div>
+    <div class="option" onclick="sel(this,'q8','C')" data-quiz="q8" data-val="C"><div class="radio"></div> c) 65%</div>
+    <div class="option" onclick="sel(this,'q8','D')" data-quiz="q8" data-val="D"><div class="radio"></div> d) 95%</div>
+    <button class="show-btn" onclick="rev('q8')">Show Answer</button>
+    <div class="answer-reveal" id="ans-q8">
+      <div class="ans-row"><span class="ans-tick">✅</span><span class="ans-label">Correct Answer</span></div>
+      <div class="ans-letter">c) 65%</div>
+      <div class="ans-explain"><strong>65% (26 out of 40 participants)</strong> obeyed all the way to the maximum 450V shock. This shocked Milgram himself — he expected very low obedience rates. Even more striking: <strong>100% went past 300V</strong>, the point where the learner was clearly in distress. This demonstrates the terrifying power of authority and situational pressure on human behaviour.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 9 -->
+
+<div class="page" id="page-9">
+  <div class="page-title">Agency Theory & Milgram Variations</div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">📘</span> Concept</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 23–24</div>
+    <p><strong>Milgram's Agency Theory (1973):</strong></p>
+    <ul>
+      <li><strong>Agentic state</strong> — when people act as someone's agent, not taking personal responsibility. They're just "following orders."</li>
+      <li>Opposite = <strong>autonomous state</strong> — acting independently, taking responsibility</li>
+      <li><strong>Binding factors</strong> keep people in agentic state:
+        <ul>
+          <li>Reluctance to disrupt the experiment</li>
+          <li>Pressure of the surroundings (lab setting)</li>
+          <li>Insistence of the authority figure</li>
+        </ul>
+      </li>
+    </ul>
+    <hr>
+    <p><strong>Factors affecting obedience (Milgram's variations):</strong></p>
+    <ul>
+      <li><strong>Presence of allies:</strong> If others disobey, obedience drops dramatically</li>
+      <li><strong>Proximity to victim:</strong> Closer to victim = less obedience (e.g., same room vs different room)</li>
+      <li><strong>Proximity of authority:</strong> Closer to authority = more obedience (phone orders = less obedience)</li>
+      <li><strong>Location legitimacy:</strong> Yale (prestigious) = more obedience than run-down office</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🌍</span> Real World Connection</div>
+    <p>The agentic state explains why soldiers can commit war crimes — they shift responsibility to their commanding officer. It also explains corporate wrongdoing ("I was just doing my job"). The variations explain why whistleblowers are so rare — if your boss (authority) is right there and nobody else is objecting (no allies), it's incredibly hard to disobey, even when you know something's wrong.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🖊️</span> Plain English</div>
+    <p>When we're following orders, we mentally shift responsibility onto the authority figure — <strong>"it's not my fault, I was told to do it."</strong> This agentic state makes it easier to do harmful things. Obedience is strongest when the authority is close, the victim is far away, and nobody else is refusing. Change any of those factors and obedience drops.</p>
+  </div>
+
+  <div class="card quiz-card">
+    <div class="badge"><span class="icon">❓</span> Question</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 22–24</div>
+    <p class="question-text">In Milgram's variations, obedience dropped when the experimenter gave orders by telephone instead of being in the room. This shows the importance of:</p>
+    <div class="option" onclick="sel(this,'q9','A')" data-quiz="q9" data-val="A"><div class="radio"></div> a) Proximity to the victim</div>
+    <div class="option" onclick="sel(this,'q9','B')" data-quiz="q9" data-val="B"><div class="radio"></div> b) Proximity of the authority figure</div>
+    <div class="option" onclick="sel(this,'q9','C')" data-quiz="q9" data-val="C"><div class="radio"></div> c) Presence of allies</div>
+    <div class="option" onclick="sel(this,'q9','D')" data-quiz="q9" data-val="D"><div class="radio"></div> d) Location legitimacy</div>
+    <button class="show-btn" onclick="rev('q9')">Show Answer</button>
+    <div class="answer-reveal" id="ans-q9">
+      <div class="ans-row"><span class="ans-tick">✅</span><span class="ans-label">Correct Answer</span></div>
+      <div class="ans-letter">b) Proximity of the authority figure</div>
+      <div class="ans-explain">When the authority figure was <strong>physically distant</strong> (on the phone), obedience dropped significantly. When authority is right there watching you, it's much harder to disobey — the pressure is immediate and personal. Phone orders are easier to ignore or "forget." This shows that the <strong>physical presence of authority</strong> is a major factor in obedience.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 10 -->
+
+<div class="page" id="page-10">
+  <div class="page-title">Obedience: What Increases/Decreases It?</div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">📘</span> Concept</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 25–26</div>
+    <p><strong>What makes obedience MORE likely:</strong></p>
+    <ul>
+      <li><strong>Gradual commitment</strong> — agreeing to small steps makes it harder to refuse the next request (like foot-in-the-door)</li>
+      <li><strong>Legitimate authority</strong> — we're more likely to obey people we see as justified authorities (police, doctors, teachers, parents)
+        <ul>
+          <li><strong>Bickman (1974):</strong> Field experiment where experimenters in different uniforms asked pedestrians to do tasks. Uniform = more obedience</li>
+        </ul>
+      </li>
+    </ul>
+    <hr>
+    <p><strong>What makes us RESISTANT to obedience:</strong></p>
+    <ul>
+      <li><strong>Dissenting peers</strong> — seeing others refuse makes it easier for you to refuse too</li>
+      <li><strong>Higher moral reasoning</strong> — people with stronger personal moral codes find it harder to shift responsibility</li>
+      <li><strong>Locus of control (Rotter, 1966):</strong>
+        <ul>
+          <li><strong>Internal locus</strong> = believe you control your own actions → more resistant to obedience</li>
+          <li><strong>External locus</strong> = believe outside forces control you → more obedient</li>
+          <li><strong>Holland (1967):</strong> Found link between internal locus of control and resistance to authority in Milgram-style studies</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🌍</span> Real World Connection</div>
+    <p><strong>Legitimate authority matters:</strong> During COVID-19, people were more likely to follow rules when they came from doctors/scientists (legitimate health authority) than politicians. Con artists exploit this — they wear fake uniforms or use official-sounding titles to manipulate people. <strong>Dissenting peers matter:</strong> In corrupt organizations, one whistleblower makes it easier for others to speak up. The first person to refuse is incredibly brave because they have no allies.</p>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">🖊️</span> Plain English</div>
+    <p>We obey more when authority seems legitimate (uniforms, titles, settings) and when we're committed gradually (small steps leading to big ones). We obey <strong>less</strong> when someone else refuses first (gives us permission to refuse too) or when we have a strong internal sense of right and wrong that won't let us shift responsibility.</p>
+  </div>
+
+  <div class="card quiz-card">
+    <div class="badge"><span class="icon">❓</span> Question</div>
+    <div class="slide-ref">📄 Lecture slides: Pages 25–26</div>
+    <p class="question-text">Bickman (1974) found that people were more likely to obey experimenters wearing official uniforms. This demonstrates the importance of:</p>
+    <div class="option" onclick="sel(this,'q10','A')" data-quiz="q10" data-val="A"><div class="radio"></div> a) Dissenting peers</div>
+    <div class="option" onclick="sel(this,'q10','B')" data-quiz="q10" data-val="B"><div class="radio"></div> b) Locus of control</div>
+    <div class="option" onclick="sel(this,'q10','C')" data-quiz="q10" data-val="C"><div class="radio"></div> c) Legitimate authority — uniforms signal justified authority</div>
+    <div class="option" onclick="sel(this,'q10','D')" data-quiz="q10" data-val="D"><div class="radio"></div> d) Proximity to the victim</div>
+    <button class="show-btn" onclick="rev('q10')">Show Answer</button>
+    <div class="answer-reveal" id="ans-q10">
+      <div class="ans-row"><span class="ans-tick">✅</span><span class="ans-label">Correct Answer</span></div>
+      <div class="ans-letter">c) Legitimate authority — uniforms signal justified authority</div>
+      <div class="ans-explain">Uniforms are a <strong>visual cue of legitimate authority</strong>. When someone looks like a security guard, police officer, or official, we automatically assume they have the right to give orders. Bickman showed this in a real-world setting — the same request was obeyed more when the person wore an official-looking uniform. This is why scammers often wear fake uniforms or badges.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="badge"><span class="icon">📝</span> Summary</div>
+    <p><strong>Key takeaways from Social Psychology:</strong></p>
+    <ul>
+      <li><strong>Conformity:</strong> We change behaviour to match groups (normative or informational influence)</li>
+      <li><strong>Minority influence:</strong> Small groups can change majority opinion if they're consistent</li>
+      <li><strong>Compliance:</strong> Foot-in-the-door and door-in-the-face techniques manipulate our desire for consistency/reciprocity</li>
+      <li><strong>Obedience:</strong> Most people obey authority figures, even to harmful extremes (Milgram 65%)</li>
+      <li><strong>Agentic state:</strong> We shift responsibility to authority when following orders</li>
+      <li><strong>Resistance:</strong> Dissenting peers, internal locus of control, and strong moral reasoning help us resist</li>
+    </ul>
+    <p style="margin-top:12px;"><strong>Next week:</strong> Developmental Psychology — Piaget and Vygotsky's theories of how children learn and develop.</p>
+  </div>
+</div>
+
+<!-- NAV BAR -->
+
+<div class="nav-bar">
+  <button class="nav-btn prev" id="prevBtn" onclick="changePage(-1)" disabled>← Previous</button>
+  <span class="nav-counter" id="pageCounter">1 / 10</span>
+  <button class="nav-btn next" id="nextBtn" onclick="changePage(1)">Next →</button>
+</div>
+
+<script>
+let cur = 1;
+const total = 10;
+const ans = {
+  q1:'B', q2:'B', q3:'B', q4:'C', q5:'B',
+  q6:'B', q7:'B', q8:'C', q9:'B', q10:'C'
+};
+const locked = {};
+
+function changePage(d){
+  document.getElementById('page-'+cur).classList.remove('active');
+  cur += d;
+  document.getElementById('page-'+cur).classList.add('active');
+  document.getElementById('pageCounter').textContent = cur + ' / ' + total;
+  document.getElementById('prevBtn').disabled = (cur === 1);
+  document.getElementById('nextBtn').disabled = (cur === total);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function sel(el, qid, val){
+  if(locked[qid]) return;
+  locked[qid] = true;
+  document.querySelectorAll('[data-quiz="'+qid+'"]').forEach(function(o){
+    o.classList.remove('selected','correct','wrong');
+  });
+  el.classList.add('selected');
+  if(val === ans[qid]){
+    el.classList.add('correct');
+  } else {
+    el.classList.add('wrong');
+    document.querySelectorAll('[data-quiz="'+qid+'"]').forEach(function(o){
+      if(o.dataset.val === ans[qid]) o.classList.add('correct');
+    });
+  }
+  document.getElementById('ans-'+qid).classList.add('visible');
+}
+
+function rev(qid){
+  if(!locked[qid]){
+    document.querySelectorAll('[data-quiz="'+qid+'"]').forEach(function(o){
+      if(o.dataset.val === ans[qid]) o.classList.add('correct');
+    });
+    locked[qid] = 'rev';
+  }
+  document.getElementById('ans-'+qid).classList.add('visible');
+}
+</script>
+
+</body>
+</html>
